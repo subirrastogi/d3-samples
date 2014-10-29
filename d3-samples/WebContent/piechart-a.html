@@ -1,8 +1,89 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
 </head>
 <body>
 
+<script src="js/jquery.js"></script>
+<script src="js/d3.js"></script>
+<script>
+function makeData(size){
+	  return d3.range(size).map(function(item){
+	   return Math.random()*100;
+	  });
+	};
+
+var width = 960;
+var height = 500;
+ 
+var svg = d3.select("body").append("svg")
+  .attr("height", height)
+  .attr("width", width);
+ 
+var g = svg.append('g')
+  .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+  
+var color = d3.scale.category20();
+
+var min = Math.min(width, height);
+var oRadius = min / 2 * 0.9;
+var iRadius = min / 2 * 0.85;
+
+//construct default pie layout
+var pie = d3.layout.pie().value(function(d){ return d; }).sort(null);
+
+//construct arc generator
+var arc = d3.svg.arc()
+  .outerRadius(oRadius)
+  .innerRadius(iRadius);
+ 
+//generate random data
+var data = makeData(20);
+
+var path = g.datum(data).selectAll("path")
+			.data(pie)
+			.enter().append("path")
+			.attr("class","piechart")
+			.attr("fill", function(d,i){
+				return color(i);
+				})
+			.attr("d",arc)
+			.each(function(d){
+				this._current =d;
+			});
+			
+function render(){
+	// generate new random data
+	  data = makeData(Math.random()*20);
+	
+	 // g.datum(data).selectAll("path").data(pie).transition().duration(1000).attr("d", arc);
+	   g.datum(data).selectAll("path").data(pie).transition().duration(1000).attrTween("d", arcTween);
+	// add any new pie segments
+	  g.datum(data).selectAll("path")
+	  .data(pie)
+	  .enter().append("path")
+	    .attr("class","piechart")
+	    .attr("fill", function(d,i){ return color(i); })
+	    .attr("d", arc)
+	  .each(function(d){ this._current = d; })
+	 
+	  // remove data not used
+	  g.datum(data).selectAll("path")
+	    .data(pie).exit().remove();
+}
+setInterval(render,2000);
+
+//Store the displayed angles in _current.
+//Then, interpolate from _current to the new angles.
+//During the transition, _current is updated in-place by d3.interpolate.
+function arcTween(a) {
+var i = d3.interpolate(this._current, a);
+this._current = i(0);
+return function(t) {
+ return arc(i(t));
+};
+}
+</script>
 </body>
 </html>
