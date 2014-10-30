@@ -5,6 +5,7 @@
 </head>
 <body>
 
+<button id="render_button">Click me</button>
 <script src="js/jquery.js"></script>
 <script src="js/d3.js"></script>
 <script>
@@ -72,8 +73,10 @@ function render(){
 	  g.datum(data).selectAll("path")
 	    .data(pie).exit().remove();
 }
-setInterval(render,2000);
-
+//setInterval(render,2000);
+$("#render_button").click(function(){
+	render();
+});
 //Store the displayed angles in _current.
 //Then, interpolate from _current to the new angles.
 //During the transition, _current is updated in-place by d3.interpolate.
