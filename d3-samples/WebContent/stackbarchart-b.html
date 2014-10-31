@@ -50,14 +50,16 @@ d3.csv("data/stackbarchart_data.csv", function (error, data) {
          });
          d.total = d.mapping[d.mapping.length - 1].y1;
        });
-     x.domain(data.map(function (d) { return d.quarter; }));
+     x.domain(data.map(function (d) { return d.Year; }));
      y.domain([0, d3.max(data, function (d) { return d.total; })]);
      
      var selection = svg.selectAll(".series")
      .data(data)
    .enter().append("g")
      .attr("class", "series")
-     .attr("transform", function (d) { return "translate(" + x(d.quarter) + ",0)"; });
+     .attr("transform", function (d) { 
+    	 return "translate(" + x(d.Year) + ",0)"; 
+    	 });
      
      selection.selectAll("rect")
      .data(function (d) { return d.mapping; })
@@ -67,6 +69,18 @@ d3.csv("data/stackbarchart_data.csv", function (error, data) {
      .attr("height", function (d) { return y(d.y0) - y(d.y1); })
      .style("fill", function (d) { return color(d.name); })
      .style("stroke", "grey");
+     
+     selection.selectAll("text")
+     .data(function (d) { return d.mapping; })
+   .enter().append("text")
+   .attr("x",x.rangeBand()/2 )
+   .attr("y",function(d) {
+	   return y(d.y0) - y(2*d.y1);
+	   })
+   .text(function(d){
+	  return d.y1; 
+   });
+     
 });
 
 </script>
