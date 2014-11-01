@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div id="stackchart">
+	<div> Filter by : <button id="total" class="btn">Total</button> &nbsp; <button id="C1" class="btn"> C1</button>
+	 <button id="C2" class="btn">C2</button>
+	</div>
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/underscore.js"></script>
+<script src="js/d3.js"></script>
+<script>
+
+
+
+d3.csv("data/stackbarchart-c.csv",function(data){
+	dataReady(data);
+});
+
+
+function dataReady(data){
+	var default_category = "C1";
+	var chart=new StackBar(data);
+	chart.filter(default_category);
+	
+	$(".btn").click("click",function(){
+		//chart.update(this.id);
+		chart.filter(this.id);
+	})
+	
+}
+
+function StackBar(data){
+
+	var category_C1 = ["Team","C1-a","C1-b","C1-c"];
+	var category_C2 = ["Team","C2-a","C2-b"];
+	
+	 var keysArr =
+	 {
+		 "C1" : ["Team","C1-a","C1-b","C1-c"],
+		 "C2" : ["Team","C2-a","C2-b"],
+	 };
+	var categoryData = {
+			"C1" : [],
+			"C2" : [],
+			/* "Total" : [] */
+	}
+	
+	data.forEach(function(d){
+		
+		var rowc1 = _.pick(d,category_C1);
+		var rowc2 = _.pick(d,category_C2);
+		categoryData.C1.push(rowc1);
+		categoryData.C2.push(rowc2);
+	});
+	var labelVar = "Team";	
+	Object.keys(categoryData).forEach(function(category){
+		var keyData = categoryData[category];
+		
+		var keys = keysArr[category].filter(function (key) { 
+			return key !== labelVar;
+			});
+		
+		keyData.forEach(function(d){
+			 var y0 = 0;
+			 d.mapping = keys.map(function(name){
+				 return {
+					 name: name,
+					 label: d[labelVar],
+		             y0: y0,
+		             y1: y0 += +d[name]
+				 };
+			 });
+			 d.total = d.mapping[d.mapping.length - 1].y1; 
+		});
+	});
+	
+	var margin = {top: 20, right: 55, bottom: 30, left: 40},
+	width  = 700 - margin.left - margin.right,
+	height = 500  - margin.top  - margin.bottom;
+
+	var x = d3.scale.ordinal()
+	.rangeRoundBands([0, width], .1);
+
+	var y = d3.scale.linear()
+	.rangeRound([height, 0]);
+
+	var color = d3.scale.ordinal()
+	.range(["#001c9c","#101b4d","#475003","#9c8305","#d3c47c"]);
+
+	var svg = d3.select("body").append("svg")
+	.attr("width",  width  + margin.left + margin.right)
+	.attr("height", height + margin.top  + margin.bottom)
+	.append("g")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+	this.filter = function(category){
+		console.log(category);
+		console.log(categoryData[category]);
+		var catData =categoryData[category];
+		 x.domain(catData.map(function (d) { return d.Team; }));
+	     y.domain([0, d3.max(catData, function (d) { return d.total; })]);
+	     
+	     //svg.datum(catData);
+	     var selection = svg.selectAll(".series")
+	     .data(catData)
+	   .enter().append("g")
+	     .attr("class", "series")
+	     .attr("transform", function (d) { 
+	    	 return "translate(" + x(d.Team) + ",0)"; 
+	    	 });
+	     
+	     selection.selectAll("rect")
+	     .data(function (d) { return d.mapping; })
+	   .enter().append("rect")
+	     .attr("width", x.rangeBand())
+	     .attr("y", function (d) { return y(d.y1); })
+	     .attr("height", function (d) { return y(d.y0) - y(d.y1); })
+	     .style("fill", function (d) { return color(d.name); })
+	     .style("stroke", "grey");
+	}
+	
+	this.update = function(category){
+		var catData =categoryData[category];
+		var g = d3.select("svg").selectAll(".series");
+		g.datum(catData);
+		
+		var rect = d3.select("svg").selectAll("rect");
+		rect.datum(catData);
+	}
+}
+
+/* var margin = {top: 20, right: 55, bottom: 30, left: 40},
+width  = 1000 - margin.left - margin.right,
+height = 500  - margin.top  - margin.bottom;
+
+var svg = d3.select("#stackchart").append("svg")
+.attr("width",  width  + margin.left + margin.right)
+.attr("height", height + margin.top  + margin.bottom)
+.append("g")
+.attr("transform", "translate(" + margin.left + "," + margin.top + ")"); */
+
+</script>
+</body>
+</html>
