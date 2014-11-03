@@ -16,3 +16,8 @@ Good resources for understanding/learning arcTween
 	T3,Feb-14,6,9,12,14,10,14,15,20
 
 	not working ...look at this example for reference - http://bl.ocks.org/mbostock/1283663
+	
+	http://stackoverflow.com/questions/18186011/how-to-update-data-in-stack-bar-chart-in-d3
+	http://stackoverflow.com/questions/21869612/d3-update-bar-chart-data-onclick
+	
+	http://www.davesquared.net/2014/09/d3-update-a-bar-chart.html

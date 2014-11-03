@@ -18,6 +18,7 @@
 
 d3.csv("data/stackbarchart-c.csv",function(data){
 	dataReady(data);
+	console.log(JSON.stringify(data));
 });
 
 
@@ -27,8 +28,8 @@ function dataReady(data){
 	chart.filter(default_category);
 	
 	$(".btn").click("click",function(){
-		//chart.update(this.id);
-		chart.filter(this.id);
+		chart.update(this.id);
+		//chart.filter(this.id);
 	})
 	
 }
@@ -52,7 +53,9 @@ function StackBar(data){
 	data.forEach(function(d){
 		
 		var rowc1 = _.pick(d,category_C1);
+		rowc1.key="C1";
 		var rowc2 = _.pick(d,category_C2);
+		rowc2.key = "C2";
 		categoryData.C1.push(rowc1);
 		categoryData.C2.push(rowc2);
 	});
@@ -124,12 +127,43 @@ function StackBar(data){
 	}
 	
 	this.update = function(category){
-		var catData =categoryData[category];
-		var g = d3.select("svg").selectAll(".series");
-		g.datum(catData);
+		var selection1 = d3.selectAll(".series");
+		var rect1 = selection1.selectAll("rect");
+		console.log(category);
 		
-		var rect = d3.select("svg").selectAll("rect");
-		rect.datum(catData);
+		var catData =categoryData[category];
+		 //x.domain(catData.map(function (d) { return d.Team; }));
+	     //y.domain([0, d3.max(catData, function (d) { return d.total; })]);
+		
+		var selection = d3.selectAll(".series")
+	     .data(catData,function(d){
+	    	 return d.key;
+	    	 });
+	     
+		var rect = selection.selectAll("rect")
+		.data(function (d) { return d.mapping; });
+		
+		rect.exit().remove();
+		
+		rect.enter().append("rect")
+	     .attr("width", x.rangeBand())
+	     .attr("y", function (d) { 
+	    	 return y(d.y1); })
+	     .attr("height", function (d) { 
+	    	 return y(d.y0) - y(d.y1); })
+	     .style("fill", function (d) { 
+	    	 return color(d.name); })
+	     .style("stroke", "grey");
+		
+		
+		
+		//rect.remove();
+		/* rect.append("rect")
+		.attr("width", x.rangeBand())
+	     .attr("y", function (d) { return y(d.y1); })
+	     .attr("height", function (d) { return y(d.y0) - y(d.y1); })
+	     .style("fill", function (d) { return color(d.name); })
+	     .style("stroke", "grey"); */
 	}
 }
 
