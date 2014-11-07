@@ -53,9 +53,9 @@ function StackBar(data){
 	data.forEach(function(d){
 		
 		var rowc1 = _.pick(d,category_C1);
-		rowc1.key="C1";
+		rowc1.key= Math.floor(Math.random()*20);
 		var rowc2 = _.pick(d,category_C2);
-		rowc2.key = "C2";
+		rowc2.key = Math.floor(Math.random()*20);
 		categoryData.C1.push(rowc1);
 		categoryData.C2.push(rowc2);
 	});
@@ -135,11 +135,12 @@ function StackBar(data){
 		 //x.domain(catData.map(function (d) { return d.Team; }));
 	     //y.domain([0, d3.max(catData, function (d) { return d.total; })]);
 		
-		var selection = d3.selectAll(".series")
+		var selection = svg.selectAll(".series")
 	     .data(catData,function(d){
 	    	 return d.key;
 	    	 });
 	     
+		selection.exit();
 		var rect = selection.selectAll("rect")
 		.data(function (d) { return d.mapping; });
 		
