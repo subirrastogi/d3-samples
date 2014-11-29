@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href='css/d3.slider.css' rel='stylesheet' type='text/css'>
+<style>
+#slider{
+margin: 60px;
+width: 200px;
+}
+</style>
+</head>
+<body>
+<div id="slider"></div>
+<script src="js/jquery.js"></script>
+<script src="js/d3.js"></script>
+<script src="js/d3.slider.js"></script>
+<script>
+var axis = d3.svg.axis().orient("top").ticks(4);
+d3.select('#slider').call(d3.slider().axis(axis).min(1999).max(2014).step(5));
+</script>
+</body>
+</html>
