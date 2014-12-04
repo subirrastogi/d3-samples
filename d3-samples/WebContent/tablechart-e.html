@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+
+rect {
+fill : lightgrey;
+stroke : grey;
+}
+</style>
+
+</head>
+<body>
+<div id="table"></div>
+<script src="js/d3.js"></script>
+<script src="js/underscore.js"></script>
+<script>
+
+d3.csv("data/tablechart-e.csv",function(data){
+	var grpByRk1 = d3.nest()
+					.key(function(d){
+						return d.rk1;
+						})
+					.entries(data);
+	
+	var grpByRk = d3.nest()
+				.key(function(d){
+					return d.rk;
+				})
+				.entries(data);
+	
+	grpByRk1.unshift("");
+	grpByRk.unshift("");
+	
+	var grpByBL = d3.nest()
+				.key(function(d){
+					return d.bl;
+				})
+				.entries(data);
+	
+	// Create the table
+    var table = d3.select("#table").append("table");
+    var thead = table.append("thead");
+    var tbody = table.append("tbody");
+
+    thead.append("tr")
+    	 .selectAll("th")
+    	 .data(grpByRk1)
+		 .enter()
+		 .append("th")
+		 .text(function(d){ return d.key;})
+		 .attr("colspan", function(d) {
+			 var len = 1;
+			 if(d.values){
+				 len = d.values.length;
+			 }
+			 return len;
+			 });
+    
+    thead.append("tr")
+    	 .selectAll("th")
+    	 .data(grpByRk)
+    	 .enter()
+    	 .append("th")
+    	 .text(function(d){
+    		 return d.key;
+    	 })
+    	 
+   var rows =  tbody.selectAll("tr")
+    	.data(grpByBL)
+    	.enter()
+    	.append("tr")
+    	.attr("rowstat",function(d){
+    		return d.key;
+    	})
+    rows.append("td")
+    .text(function(d){return d.key;})
+    
+    rows.selectAll(".row")
+    	.data(function(d){ return d.values;})
+    	.enter()
+    	.append("td")
+    	.attr("class","row")
+    	.text(function(d){
+    		return d.score;
+    	});
+});
+
+</script>
+</body>
+</html>
