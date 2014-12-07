@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+</style>
+</head>
+<body>
+<div id="control">
+ <button id="update">Update</button>
+</div>
+<div id="chart"></div>
+<script src="js/jquery.js"></script>
+<script src="js/d3.js"></script>
+<script src="js/underscore.js"></script>
+<script>
+var data_1 = [{
+	"name" : 'row-1',
+	"values" : [10,11,12]
+},{
+	"name" : "row-2",
+	"values" : [3,4,5]
+},{
+	"name" : "row-3",
+	"values" : [7,8,9]
+	}];
+
+var data_1_ch2 = [{
+	"name" : 'row-4',
+	"values" : [10,11,13]
+},{
+	"name" : "row-5",
+	"values" : [3,4,6]
+},{
+	"name" : "row-6",
+	"values" : [7,8,10]
+	}];
+	
+	
+</script>
+<script>
+var table = d3.select("#chart").append("table");
+var thead = table.append("thead");
+var tbody = table.append("tbody");
+
+function tableChart(data){
+	var rows = tbody.selectAll("tr")
+	.data(data);
+	
+	rows
+	.enter()
+	.append("tr")
+	.attr("class","row");
+
+	var cols = rows.selectAll("td")
+	.data(function(d){
+		return d.values;
+		},function(d){
+			return d;
+		});
+	cols
+	.enter()
+	.append("td")
+	.attr("class"," item")
+	.text(function (d){
+		return d;
+		});
+	cols.exit().remove();
+	rows.exit().remove();
+}
+
+tableChart(data_1);
+
+$('#update').click(function(event){
+	tableChart(data_1_ch2);	
+});
+/* function update(){
+	var rows	
+} */
+
+
+</script>
+</body>
+</html>
