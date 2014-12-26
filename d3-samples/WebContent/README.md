@@ -21,3 +21,15 @@ Good resources for understanding/learning arcTween
 	http://stackoverflow.com/questions/21869612/d3-update-bar-chart-data-onclick
 	
 	http://www.davesquared.net/2014/09/d3-update-a-bar-chart.html
+	
+
+#Table chart-f notes
+
+dataengine
+
+dataengine.updateOptions()
+var data = dataengine.getData()
+
+tablechart.update(data);
+
+#worldmap-g chart based on http://bl.ocks.org/mbostock/4183330
