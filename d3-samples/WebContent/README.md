@@ -35,3 +35,7 @@ tablechart.update(data);
 #worldmap-g chart based on http://bl.ocks.org/mbostock/4183330
 
 #worldcity-h chart based on https://gist.github.com/d3noob/5193723
+
+
+#for leaning transition & animation.. this is a very nice link
+https://github.com/jasondavies/d3-cloud/blob/master/examples/simple.html
