@@ -33,3 +33,5 @@ var data = dataengine.getData()
 tablechart.update(data);
 
 #worldmap-g chart based on http://bl.ocks.org/mbostock/4183330
+
+#worldcity-h chart based on https://gist.github.com/d3noob/5193723
