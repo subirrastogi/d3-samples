@@ -10,3 +10,6 @@ piechart-a.html , It's based on the this link - http://jonsadka.com/blog/how-to-
 Explore this link - http://bl.ocks.org/lmatteis/efd9be8f472e673eef6ce9d1951256a9
 d3js + crossfilter
 
+Good example of sankey diagram and how to tell the storytelling.
+2. http://www.people-press.org/interactives/dem-candidate-switching/
+
